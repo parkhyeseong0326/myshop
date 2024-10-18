@@ -13,7 +13,7 @@
 }
 .wrapper:hover {
     box-shadow: 0 25px 45px rgba(0,0,0,0.50), 0 20px 25px rgba(0,0,0,0.50);
-    opacity: 0.86;
+    opacity: 0.89;
 
     .head{opacity: 1;}
 }
