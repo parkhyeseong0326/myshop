@@ -1,5 +1,5 @@
 import styles from "./sign.module.css"
-import { TextField, Fade } from "@mui/material"
+import { TextField, Fade, Button } from "@mui/material"
 import { useState } from "react"
 
 export default function Sign() {
@@ -7,11 +7,13 @@ export default function Sign() {
     const [pwValue, setPwValue] = useState("");
     const [pwCheckValue, setPwCheckValue] = useState("");
     const [showPwField, setShowPwField] = useState(false);
+    const [userNameValue, setUserNameValue] = useState("");
+    const [showPwCheckField, setShowPwCheckField] = useState(false);
+
     const [helpText, setHelpText] = useState("6-12자 이내 영문, 숫자 사용가능")
     const [pwHelpText, setPwHelpText] = useState(false);
     const [pwCheckHelpText, setPwCheckHelpText] = useState(false);
     const [idError, setIdError] = useState(false)   
-    const [showPwCheckField, setShowPwCheckField] = useState(false);
     const [pwError, setPwError] = useState(false);
     const [pwCheckError, setPwCheckError] = useState(false);
 
@@ -22,43 +24,58 @@ export default function Sign() {
         if (regexId.test(value)) {
             console.log("유효한 ID입니다")
             setHelpText("사용 가능한 ID 입니다.")
-            setError(false)
+            setIdError(false)
             setShowPwField(true);
         } else {
             console.log("유효하지 않습니다.")
             setHelpText("유효하지 않은 ID입니다. 6-12자 이내 영문, 숫자 사용가능")
-            setError(true)
+            setIdError(true)
             setShowPwField(false);
         }
 
     };
-
     const handlePwChange = (event) => {
         const value = event.target.value;
         setPwValue(value);
-
-        const regexPw = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&`\\(\\)\-__=+]).{8,16}$/;
-
+        const regexPw = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+        
         if (regexPw.test(value)) {
             setShowPwCheckField(true);
             setPwError(false);
-            setPwHelpText("사용가능한 PW 입니다.")
-        }else {
+            setPwHelpText("사용 가능한 PW 입니다.")
+        } else {
             setShowPwCheckField(false);
             setPwError(true);
             setPwHelpText("비밀번호는 8~16자 이내 영문,숫자,특수문자를 포함해야 합니다.")
         }
-    }
+        };
 
     const handlePwCheckChange = (event) => {
-        const value = event.target.value;
-        setPwCheckValue(value);
+    // 목표 : PwTextField에 있는 값을 가져와서 똑같은지 검사
+    const value = event.target.value;
+    setPwCheckValue(value);
+    
+    if (pwValue == value) {
+        setPwCheckError(false)
+        setPwCheckHelpText("비밀번호가 일치합니다.")
+    } else {
+        setPwCheckError(true)
+        setPwCheckHelpText("비밀번호가 일치하지 않습니다.")
+    }
+    }
+    const handleUserNameChange = (event) => {
+        const value = event.target.value
 
-        if (pwValue == pwCheckValue) {
-            setPwCheckError(false)
+        if (value.length >= 0) {
+            setUserNameValue(value);
+        }
+    }
+
+    const handleSubmit = () => {
+        if(!idError && !pwError && !pwCheckError && userNameValue.length > 0 && idValue.length > 0) {
+            alert("회원가입 완료")
         } else {
-            setPwCheckError(true)
-            setPwCheckHelpText("비밀번호가 일치하지 않습니다.")
+            alert("모든 입력란을 올바르게 채워주세요.")
         }
     }
 
@@ -67,6 +84,15 @@ export default function Sign() {
             <div className={styles.wrapper}>
                 <h2 className={styles.head}>회원가입</h2>
                 <div className={styles.from}>
+                    <TextField
+                        id="username-required"
+                        label="Username"
+                        placeholder="닉네임"
+                        helperText="사용하실 닉네임을 입력해주세요."
+                        value={userNameValue}
+                        onChange={handleUserNameChange}
+                        fullWidth
+                    ></TextField>
                     <TextField 
                         error={idError}
                         id="id-required"
@@ -109,7 +135,13 @@ export default function Sign() {
                             </TextField>
                         </Fade>
                     )}
-                    
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        onClick={handleSubmit}
+                        style={{marginTop: '20px'}}
+                    >Continue</Button>
                 </div>
             </div>
         </>

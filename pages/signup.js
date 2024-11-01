@@ -1,6 +1,6 @@
 import Sign from "@/components/sign"
 
-export default function Signin() {
+export default function SignUp() {
     return (
         <div className="modern-gradient">
             <Sign></Sign> 
