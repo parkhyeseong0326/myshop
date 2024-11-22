@@ -71,11 +71,27 @@ export default function Sign() {
         }
     }
 
-    const handleSubmit = () => {
-        if(!idError && !pwError && !pwCheckError && userNameValue.length > 0 && idValue.length > 0) {
-            alert("회원가입 완료")
-        } else {
-            alert("모든 입력란을 올바르게 채워주세요.")
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("/api/register", {
+                method : "POST", 
+                headers : {
+                    "Content-Type" : "application/json",
+                },
+                body : JSON.stringify({
+                    username: userNameValue,
+                    userId : idValue,
+                    password : pwValue,
+                }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert("회원가입 완료");
+            }else {
+                alert("회원가입 실패");
+            }
+        } catch (error) {
+            console.log("회원가입 실패 :", error);
         }
     }
 
